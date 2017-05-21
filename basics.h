@@ -19,11 +19,11 @@
 
 class Vector{
 public:
-    Vector();
+    Vector();//vecteur nul
     Vector(int a, int b, int c);
-    Vector multiply(int number);
-    Vector add(Vector a);
-    int dotProduct(Vector a);
+    Vector multiply(int number);//multiplication par un scalaire
+    Vector add(Vector a);//additionne 2 vecteurs
+    int dotProduct(Vector a);//produit vectoriel
     
     
 private:
