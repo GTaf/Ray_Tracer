@@ -48,21 +48,21 @@ bool ray_sphere_intersect(Ray r, Sphere s){
     return d >= 0;
 }
 
-void tracer(Camera c, Scene s){
+void tracer(Camera ca, Scene s){
     //pour tous les spheres
     
-    Vector eye = c.getEye();
-    Vector target = c.getTarget();
+    Vector eye = ca.getEye();
+    Vector target = ca.getTarget();
     
     //code for Cimg found at 
     //https://stackoverflow.com/questions/14914709/
-    CImg<float> img(c.getH(),c.getW(),1,3); //create image
+    CImg<float> img(ca.getH(),ca.getW(),1,3); //create image
     
     cimg_forXYC(img,x,y,c) {  //for each pixel of the image
         
-        Ray r = Ray(,eye);
+        Ray r = ca.Rayf(x,y);
         for(int i = 0; i < s.size(); i++){
-            if(ray_sphere_intersect(,s.getSphere(i))){//compute color
+            if(ray_sphere_intersect(r,s.getSphere(i))){//compute color
                 break;
             }
             img(x,y,0) = 1;

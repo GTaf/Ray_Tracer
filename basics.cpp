@@ -14,27 +14,25 @@
 #include <cstdlib>
 #include <set>
 #include "basics.h"
+#include <math.h> 
 
 using namespace std;
 
 /*
  * 
  */
-Vector::Vector(){
-    x = 0; y = 0; z = 0;
+Vector::Vector(){x = 0; y = 0; z = 0;}
+Vector::Vector(double a, double b, double c){x = a; y = b; z = c;}
+Vector Vector::multiply(double n){return Vector(x*n,y*n,z*n);}
+Vector Vector::add(Vector a){return Vector(a.x+x, a.y+y, a.z+z);}
+double Vector::dotProduct(Vector a){return x*a.x+y*a.y+z*a.z;}
+Vector Vector::orth(Vector v){
+    
+    return Vector(y*v.z-z*v.y,z*v.x-v.z*x,x*v.y-y*v.x);
 }
-Vector::Vector(double a, double b, double c){
-    x = a; y = b; z = c;
-}
-Vector Vector::multiply(double number){
-    return Vector(x*number,y*number,z*number);
-}
-Vector Vector::add(Vector a){
-    return Vector(a.x+x, a.y+y, a.z+z);
-}
-double Vector::dotProduct(Vector a){
-    return x*a.x+y*a.y+z*a.z;
-}
+Vector Vector::minus(Vector v){return this->add(v.multiply(-1));}
+double Vector::norm(){return sqrt(x*x+y*y+z*z);}
+Vector Vector::normalize(){double n = this->norm(); return Vector(x/n,y/n,z/n);}
 
 
 Ray::Ray(Vector gv, Vector gp){v = gv; p = gp;}
@@ -70,8 +68,12 @@ Vector Camera::getTarget(){return target;}
 Vector Camera::getUp(){return up;}
 int Camera::getW(){return h;}
 int Camera::getH(){return w;}
-Vector Camera::Ray(int x, int y){
-    return target.add(up.multiply(y));
+Ray Camera::Rayf(double x, double y){
+    Vector final = target;
+    final = final.add(up.normalize().multiply(y-h/2));
+    final = final.add(up.orth(target.minus(eye)).normalize().multiply(x-w/2));
+    Ray r = Ray(final.minus(eye), eye);
+    return r;
 }
 
 Scene::Scene(int size){std::vector<Sphere> fset(size); set = fset;}

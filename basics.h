@@ -23,9 +23,13 @@ class Vector{
 public:
     Vector();//vecteur nul
     Vector(double a, double b, double c);
-    Vector multiply(double number);//multiplication par un scalaire
+    Vector multiply(double n);//multiplication par un scalaire
     Vector add(Vector a);//additionne 2 vecteurs
     double dotProduct(Vector a);//produit vectoriel
+    Vector orth(Vector v);
+    Vector minus(Vector v);
+    double norm();
+    Vector normalize();
     
     
 private:
@@ -92,7 +96,7 @@ public:
     Vector getUp();
     int getW();
     int getH();
-    Vector Camera::Ray(int x, int y);
+    Ray Rayf(double x, double y);//ray thas goes from eye to target + (x,y)
     
     
 private:
