@@ -48,7 +48,7 @@ Sphere::Sphere(int r, Vector c){
     p = c;
 }
 
-Color::setValue(double value,int channel){
+Color::setValue(const double value,const int channel){
     if(value>1 || value<0) return;
     switch(channel){
         case 1:
