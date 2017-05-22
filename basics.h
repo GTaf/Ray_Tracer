@@ -19,17 +19,30 @@
 
 class Vector{
 public:
-    Vector();
+    Vector();//vecteur nul
     Vector(int a, int b, int c);
-    Vector multiply(int number);
-    Vector add(Vector a);
-    int dotProduct(Vector a);
+    Vector multiply(int number);//multiplication par un scalaire
+    Vector add(Vector a);//additionne 2 vecteurs
+    int dotProduct(Vector a);//produit vectoriel
     
     
 private:
     int x, y ,z;
     
 };
+
+
+class Color{
+public:
+    Color(double R,double G,double B):r(R),g(G),b(B){}
+    Color(){Color(1.,1.,1.);}
+    void setValue(const double value,const int channel);
+private:
+    double r;
+    double g;
+    double b;
+};
+
 
 class Ray{
 public:
@@ -51,11 +64,21 @@ public:
 private:
     int radius;
     Vector p;
-    int color;
+    Color color;
 };
 
 class Source{
 private:
     Vector p;
+};
+
+class Light{
+public:
+    Vector getPoint();
+    Color getColor();
+ 
+private:
+    Vector p;
+    Color color; //Les trois composantes de couleur
 };
 
