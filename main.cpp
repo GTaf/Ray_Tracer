@@ -14,13 +14,17 @@
 #include <cstdlib>
 #include "basics.h"
 #include <iostream>
+#include "CImg.hpp"
 
 using namespace std;
+using namespace cimg_library;
+
 
 /*
  * 
  */
 bool ray_sphere_intersect(Ray r, Sphere s);
+void tracer();
 
 int main(int argc, char** argv) {
     
@@ -39,7 +43,34 @@ bool ray_sphere_intersect(Ray r, Sphere s){
     d = d*d;
     d -= m.dotProduct(m);
     d += s.getRadius()*s.getRadius();
-    //according to https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
+    //according to 
+    //https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
     return d >= 0;
+}
+
+void tracer(Camera c, Scene s){
+    //pour tous les spheres
+    
+    Vector eye = c.getEye();
+    Vector target = c.getTarget();
+    
+    //code for Cimg found at 
+    //https://stackoverflow.com/questions/14914709/
+    CImg<float> img(c.getH(),c.getW(),1,3); //create image
+    
+    cimg_forXYC(img,x,y,c) {  //for each pixel of the image
+        
+        Ray r = Ray(,eye);
+        for(int i = 0; i < s.size(); i++){
+            if(ray_sphere_intersect(,s.getSphere(i))){//compute color
+                break;
+            }
+            img(x,y,0) = 1;
+            img(x,y,1) = 1;
+            img(x,y,2) = 1;
+        }
+        //img(x,y,c) = pixel_value_at(x,y,c); 
+    }
+    
 }
 

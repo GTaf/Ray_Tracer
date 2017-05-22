@@ -43,8 +43,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-L/usr/local/lib -lm -lpthread -lX11
+CXXFLAGS=-L/usr/local/lib -lm -lpthread -lX11
 
 # Fortran Compiler Flags
 FFLAGS=

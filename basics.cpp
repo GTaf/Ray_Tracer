@@ -12,6 +12,7 @@
  */
 
 #include <cstdlib>
+#include <set>
 #include "basics.h"
 
 using namespace std;
@@ -22,16 +23,16 @@ using namespace std;
 Vector::Vector(){
     x = 0; y = 0; z = 0;
 }
-Vector::Vector(int a, int b, int c){
+Vector::Vector(double a, double b, double c){
     x = a; y = b; z = c;
 }
-Vector Vector::multiply(int number){
+Vector Vector::multiply(double number){
     return Vector(x*number,y*number,z*number);
 }
 Vector Vector::add(Vector a){
     return Vector(a.x+x, a.y+y, a.z+z);
 }
-int Vector::dotProduct(Vector a){
+double Vector::dotProduct(Vector a){
     return x*a.x+y*a.y+z*a.z;
 }
 
@@ -47,6 +48,7 @@ Sphere::Sphere(int r, Vector c){
     radius = r;
     p = c;
 }
+Sphere::Sphere(){}
 
 
 void Color::setValue(const double value,const int channel){
@@ -62,4 +64,20 @@ void Color::setValue(const double value,const int channel){
             break;       
     }
 }
+
+Vector Camera::getEye(){return eye;}
+Vector Camera::getTarget(){return target;}
+Vector Camera::getUp(){return up;}
+int Camera::getW(){return h;}
+int Camera::getH(){return w;}
+Vector Camera::Ray(int x, int y){
+    return target.add(up.multiply(y));
+}
+
+Scene::Scene(int size){std::vector<Sphere> fset(size); set = fset;}
+int Scene::size(){return set.size();}
+void Scene::addSphere(Sphere s){set.push_back(s);}
+Sphere Scene::getSphere(int index){return set[index];}
+
+        
 

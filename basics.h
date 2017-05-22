@@ -14,20 +14,22 @@
 #ifndef BASICS_H
 #define BASICS_H
 
+#include <vector>
+
 
 #endif /* BASICS_H */
 
 class Vector{
 public:
     Vector();//vecteur nul
-    Vector(int a, int b, int c);
-    Vector multiply(int number);//multiplication par un scalaire
+    Vector(double a, double b, double c);
+    Vector multiply(double number);//multiplication par un scalaire
     Vector add(Vector a);//additionne 2 vecteurs
-    int dotProduct(Vector a);//produit vectoriel
+    double dotProduct(Vector a);//produit vectoriel
     
     
 private:
-    int x, y ,z;
+    double x, y ,z;
     
 };
 
@@ -57,6 +59,7 @@ private:
 
 class Sphere{
 public:
+    Sphere();
     Sphere(int r, Vector c);
     Vector getCenter();
     int getRadius();
@@ -82,4 +85,27 @@ private:
     Color color; //Les trois composantes de couleur
 };
 
+class Camera{
+public:
+    Vector getEye();
+    Vector getTarget();
+    Vector getUp();
+    int getW();
+    int getH();
+    Vector Camera::Ray(int x, int y);
+    
+    
+private:
+    Vector eye, target, up;//up défini l'unité de base de l'image
+    int h,w;//dimensions
+};
 
+class Scene{
+public:
+    Scene(int size);
+    int size();
+    void addSphere(Sphere s);
+    Sphere getSphere(int index);
+private:
+    std::vector<Sphere> set; 
+};
