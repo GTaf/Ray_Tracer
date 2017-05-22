@@ -59,3 +59,23 @@ private:
     Vector p;
 };
 
+class Light{
+public:
+    Vector getPoint();
+    Color getColor();
+ 
+private:
+    Vector p;
+    Color color; //Les trois composantes de couleur
+};
+
+class Color{
+public:
+    Color(R,G,B):r(R),g(G),b(B){}
+    Color(){Color(1.,1.,1.);}
+    setValue(double value, int channel);
+private:
+    double r;
+    double g;
+    double b;
+};
