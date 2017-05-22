@@ -31,6 +31,7 @@ private:
     
 };
 
+<<<<<<< HEAD
 
 class Color{
 public:
@@ -44,6 +45,8 @@ private:
 };
 
 
+=======
+>>>>>>> ccd9ccb90db401bd9cd0de772e3bceaf38cacb5a
 class Ray{
 public:
     Ray(Vector gv, Vector gp);
@@ -64,7 +67,11 @@ public:
 private:
     int radius;
     Vector p;
+<<<<<<< HEAD
     Color color;
+=======
+    int color;
+>>>>>>> ccd9ccb90db401bd9cd0de772e3bceaf38cacb5a
 };
 
 class Source{
@@ -82,3 +89,16 @@ private:
     Color color; //Les trois composantes de couleur
 };
 
+<<<<<<< HEAD
+=======
+class Color{
+public:
+    Color(R,G,B):r(R),g(G),b(B){}
+    Color(){Color(1.,1.,1.);}
+    setValue(const double value,const int channel);
+private:
+    double r;
+    double g;
+    double b;
+};
+>>>>>>> ccd9ccb90db401bd9cd0de772e3bceaf38cacb5a
