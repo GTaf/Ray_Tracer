@@ -73,7 +73,7 @@ class Color{
 public:
     Color(R,G,B):r(R),g(G),b(B){}
     Color(){Color(1.,1.,1.);}
-    setValue(double value, int channel);
+    setValue(const double value,const int channel);
 private:
     double r;
     double g;
