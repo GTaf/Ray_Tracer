@@ -68,9 +68,12 @@ void tracer(Camera ca, Scene s){
             img(x,y,0) = 1;
             img(x,y,1) = 1;
             img(x,y,2) = 1;
+            
         }
         //img(x,y,c) = pixel_value_at(x,y,c); 
     }
+    
+    img.save("file.bmp");
     
 }
 

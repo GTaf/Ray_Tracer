@@ -1,6 +1,7 @@
 #pragma once
 
-#include <stdlib>
+#include <cstdlib>
+#include <iostream>
 #include "basics.h"
 
 /**
