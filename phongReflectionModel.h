@@ -13,4 +13,4 @@
 *   @param pos    la position du point
 *   @return       un objet de classe Color représentant la couleur perçue
 */
-Color phongColor(const Camera& cam,const Scene& scene, const std::vector<Light>& lights, const Sphere& sphere,const Vector& pos);
+Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& lights, const Sphere& sphere,const Vector& pos);
