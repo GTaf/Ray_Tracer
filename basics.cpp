@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   basics.cpp
  * Author: gtaf
  *
@@ -14,25 +14,22 @@
 #include <cstdlib>
 #include <set>
 #include "basics.h"
-#include <math.h> 
+#include <math.h>
 
 using namespace std;
 
 /*
- * 
+ *
  */
 Vector::Vector(){x = 0; y = 0; z = 0;}
 Vector::Vector(double a, double b, double c){x = a; y = b; z = c;}
-Vector Vector::multiply(double n){return Vector(x*n,y*n,z*n);}
-Vector Vector::add(Vector a){return Vector(a.x+x, a.y+y, a.z+z);}
-double Vector::dotProduct(Vector a){return x*a.x+y*a.y+z*a.z;}
-Vector Vector::orth(Vector v){
-    
-    return Vector(y*v.z-z*v.y,z*v.x-v.z*x,x*v.y-y*v.x);
-}
-Vector Vector::minus(Vector v){return this->add(v.multiply(-1));}
-double Vector::norm(){return sqrt(x*x+y*y+z*z);}
-Vector Vector::normalize(){double n = this->norm(); return Vector(x/n,y/n,z/n);}
+Vector Vector::multiply(double n)const {return Vector(x*n,y*n,z*n);}
+Vector Vector::add(Vector a)const {return Vector(a.x+x, a.y+y, a.z+z);}
+double Vector::dotProduct(Vector a)const {return x*a.x+y*a.y+z*a.z;}
+Vector Vector::orth(Vector v)const {return Vector(y*v.z-z*v.y,z*v.x-v.z*x,x*v.y-y*v.x);}
+Vector Vector::minus(Vector v)const {return this->add(v.multiply(-1));}
+double Vector::norm()const {return sqrt(x*x+y*y+z*z);}
+Vector Vector::normalize()const {double n = this->norm(); return Vector(x/n,y/n,z/n);}
 
 
 Ray::Ray(Vector gv, Vector gp){v = gv; p = gp;}
@@ -50,17 +47,13 @@ Sphere::Sphere(){}
 
 
 void Color::setValue(const double value,const int channel){
-    if(value>1 || value<0) return;
-    switch(channel){
-        case 1:
-            r=value;break;
-        case 2:
-            g=value;break;
-        case 3:
-            b=value;break;
-        default:
-            break;       
-    }
+    if(value>1 || value<0 || channel <0 || channel>2) return;
+    rgb[channel]=value;
+}
+
+double Color::getValue(const int channel){
+    if (channel<0 || channel >2) return -1.;
+    return rgb[channel];
 }
 
 Vector Camera::getEye(){return eye;}
@@ -79,7 +72,9 @@ Ray Camera::Rayf(double x, double y){
 Scene::Scene(int size){std::vector<Sphere> fset(size); set = fset;}
 int Scene::size(){return set.size();}
 void Scene::addSphere(Sphere s){set.push_back(s);}
+void Scene::setAmbiantLighting(double l){
+  if(l<0) ambiantLighting=0;
+  else if(l>1) ambiantLighting=1;
+  else ambiantLighting=l;
+}
 Sphere Scene::getSphere(int index){return set[index];}
-
-        
-
