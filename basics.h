@@ -48,7 +48,7 @@ public:
     Color(const double& r,const double& g,double const& b){rgb[0]=r;rgb[1]=g;rgb[2]=b;}
     Color(){Color(0.,0.,0.);}
     void setValue(const double value,const int channel);
-    double getValue(const int channel);
+    double getValue(const int channel)const;
 private:
     double rgb[3];
 };
@@ -61,10 +61,10 @@ class Material{
 public:
   Material(){};
   Material(const double& s,const double& d,const double& a,const double& alph):ks(s),kd(d),ka(a),alpha(alph){}
-  double getSpecular(){return ks;}
-  double getDiffuse(){return kd;}
-  double getAmbient(){return ka;}
-  double getAlpha(){return alpha;}
+  double getSpecular()const{return ks;}
+  double getDiffuse()const{return kd;}
+  double getAmbient()const{return ka;}
+  double getAlpha()const{return alpha;}
 
 private:
   double ks;  //specular reflection constant, the ratio of reflection of the specular term of incoming light
@@ -76,8 +76,8 @@ private:
 class Ray{
 public:
     Ray(Vector gv, Vector gp);
-    Vector getPoint();
-    Vector getVector();
+    Vector getPoint()const;
+    Vector getVector()const;
 
 
 private:
@@ -88,11 +88,11 @@ class Sphere{
 public:
     Sphere();
     Sphere(int r, Vector c);
-    Vector getCenter();
-    Vector getNormal(const Vector& pos){return (pos-p).normalize();}
+    Vector getCenter()const;
+    Vector getNormal(const Vector& pos)const{return (pos-p).normalize();}
     void setMaterial(const Material& m){material=m;}
-    Material getMaterial(){return material;}
-    int getRadius();
+    Material getMaterial()const{return material;}
+    int getRadius()const;
 
 private:
     int radius;
@@ -109,10 +109,10 @@ private:
 class Light{
 public:
     Light(const Vector& P,const Color& c,const double& spec,const double& diff):p(P),color(c),specular(spec),diffuse(diff){}
-    Vector getPoint();
-    Color getColor();
-    double getSpecular(){return specular;}
-    double getDiffuse(){return diffuse;}
+    Vector getPoint()const{return p;};
+    Color getColor()const{return color;}
+    double getSpecular()const{return specular;}
+    double getDiffuse()const{return diffuse;}
 
 private:
     Vector p;
@@ -123,11 +123,11 @@ private:
 
 class Camera{
 public:
-    Vector getEye();
-    Vector getTarget();
-    Vector getUp();
-    int getW();
-    int getH();
+    Vector getEye()const;
+    Vector getTarget()const;
+    Vector getUp()const;
+    int getW()const;
+    int getH()const;
     Ray Rayf(double x, double y);//ray thas goes from eye to target + (x,y)
 
 
@@ -142,8 +142,8 @@ public:
     int size();
     void addSphere(Sphere s);
     void setAmbiantLighting(double l);
-    double getAmbiantLighting(){return ambiantLighting;}
-    Sphere getSphere(int index);
+    double getAmbiantLighting()const{return ambiantLighting;}
+    Sphere getSphere(int index)const;
 private:
     std::vector<Sphere> set;
     double ambiantLighting;
