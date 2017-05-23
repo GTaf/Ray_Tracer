@@ -5,7 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>CImg.hpp</itemPath>
-      <itemPath>PhongReflectionModel.h</itemPath>
       <itemPath>basics.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -15,9 +14,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>PhongReflectionModel.cpp</itemPath>
       <itemPath>basics.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>phongReflectionModel.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -49,15 +48,13 @@
       </compileType>
       <item path="CImg.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PhongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="PhongReflectionModel.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="basics.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="basics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="phongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -82,15 +79,13 @@
       </compileType>
       <item path="CImg.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PhongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="PhongReflectionModel.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="basics.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="basics.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="phongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

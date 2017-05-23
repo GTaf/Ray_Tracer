@@ -35,9 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/PhongReflectionModel.o \
 	${OBJECTDIR}/basics.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/phongReflectionModel.o
 
 
 # C Compiler Flags
@@ -64,11 +64,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/projet_inf442: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/projet_inf442 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/PhongReflectionModel.o: PhongReflectionModel.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PhongReflectionModel.o PhongReflectionModel.cpp
-
 ${OBJECTDIR}/basics.o: basics.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -78,6 +73,11 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/phongReflectionModel.o: phongReflectionModel.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/phongReflectionModel.o phongReflectionModel.cpp
 
 # Subprojects
 .build-subprojects:
