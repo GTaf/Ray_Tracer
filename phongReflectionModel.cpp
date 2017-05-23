@@ -1,4 +1,4 @@
-#include "PhongReflectionModel.h"
+#include "phongReflectionModel.h"
 
 Color phongColor(const Camera& cam,const Scene& scene, const std::vector<Light>& lights, const Sphere& sphere,const Vector& pos){
   Color c;
