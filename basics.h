@@ -88,6 +88,7 @@ class Sphere{
 public:
     Sphere();
     Sphere(int r, Vector c);
+    Sphere(int r, Vector v , Color c , Material m):radius(r),p(v),color(c),material(m){}
     Vector getCenter()const;
     Vector getNormal(const Vector& pos)const{return (pos-p).normalize();}
     void setMaterial(const Material& m){material=m;}

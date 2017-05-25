@@ -3,7 +3,7 @@
 using namespace std;
 Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& lights, const Sphere& sphere,const Vector& pos){
   Color c;
-  for(int i=0;i<2;i++){
+  for(int i=0;i<3;i++){
     Material m=sphere.getMaterial();
     double ambiantLighting = m.getAmbient()*scene.getAmbiantLighting();
     double diffuseLighting=0.;
@@ -20,6 +20,6 @@ Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& 
     }
     c.setValue(c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting,i);
   }
-  cout<<"Computed color"<<endl<<c;
+  //cout<<"Computed color"<<endl<<c;
   return c;
 }

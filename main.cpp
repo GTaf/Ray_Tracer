@@ -29,7 +29,7 @@ void tracer(Camera ca, Scene s);
 
 int main(int argc, char** argv) {
     
-    Sphere s = Sphere(250, Vector(500,0,0), Color(100,50,0), Material(1,1,1,1));
+    Sphere s = Sphere(250, Vector(500,0,0), Color(255,50,0), Material(1,1,1,1));
     Ray r = Ray(Vector(1,0,0), Vector(0,5,0));
     double dist;
     bool b = ray_sphere_intersect(r,s,&dist);
@@ -81,13 +81,16 @@ void tracer(Camera ca, Scene s){
             double dist = 0;
             if(ray_sphere_intersect(r,s.getSphere(i),&dist)){//compute color
                 Vector intersect = ca.getEye()+r.getVector().normalize().multiply(dist);
+                cout << intersect;
                 std::vector<Light> lights;
                 lights.push_back(Light(Vector(0,0,1), Color(255,255,255), 0, 1));
                 Color c = phongColor(ca, s, lights, s.getSphere(i), intersect);
                 for(int i = 0; i <3; i++){
                     //cout << "   " << c.getValue(i)*255;
                     img(x,y,i) = c.getValue(i)*255;
+                    cout << c.getValue(i)*255 << "     ";
                 }
+                cout << endl << endl;
             }
             else{
                 for(int i = 0; i <3; i++){
