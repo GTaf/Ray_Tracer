@@ -47,7 +47,7 @@ Sphere::Sphere(){}
 
 
 void Color::setValue(const double value,const int channel){
-    if(value>1 || value<0 || channel <0 || channel>2) return;
+    if(channel <0 || channel>2) return;
     rgb[channel]=value;
 }
 

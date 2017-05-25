@@ -52,6 +52,7 @@ public:
 private:
     double rgb[3];
 };
+inline std::ostream& operator<<(std::ostream& out, const Color& c){out<<"#COLOR# "<<" R="<<c.getValue(0)<<"  G="<<c.getValue(1)<<"  B="<<c.getValue(2);}
 
 /**
 * Classe représentant un matériau. Un matériau possède quatre propriétés représentant sa réaction à la lumière ambiantede l'environnement,
@@ -93,6 +94,7 @@ public:
     Vector getNormal(const Vector& pos)const{return (pos-p).normalize();}
     void setMaterial(const Material& m){material=m;}
     Material getMaterial()const{return material;}
+    Color getColor()const{return color;}
     int getRadius()const;
 
 private:
@@ -109,17 +111,15 @@ private:
 
 class Light{
 public:
-    Light(const Vector& P,const Color& c,const double& spec,const double& diff):p(P),color(c),specular(spec),diffuse(diff){}
+    Light(const Vector& P,const Color& spec,const Color& diff):p(P),specular(spec),diffuse(diff){}
     Vector getPoint()const{return p;};
-    Color getColor()const{return color;}
-    double getSpecular()const{return specular;}
-    double getDiffuse()const{return diffuse;}
+    double getSpecular(int i)const{return specular.getValue(i);}
+    double getDiffuse(int i)const{return diffuse.getValue(i);}
 
 private:
     Vector p;
-    Color color; //Les trois composantes de couleur
-    double specular;
-    double diffuse;
+    Color specular;
+    Color diffuse;
 };
 
 class Camera{
