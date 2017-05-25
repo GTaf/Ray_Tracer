@@ -14,6 +14,7 @@ Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& 
       Vector N=sphere.getNormal(pos);
       Vector R=2*(L*N)*N-L;
       Vector V=(cam.getEye()-pos).normalize();
+      if(L*N>0)          //Pourquoi ? cette situation ne devrait JAMAIS arriver !!!
       diffuseLighting+=m.getDiffuse()*sphere.getColor().getValue(i)*(L*N)*it->getDiffuse(i);
       double mirror=0.;
       if(R*V>0) mirror+=pow(R*V,m.getAlpha()); /************************à rediscuter !!!************************************/
@@ -23,7 +24,7 @@ Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& 
       cout<<diffuseLighting<<" diffuse "<<L*N<<endl;
     }
     //cout<<"i "<<i<<" v "<<c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting<<endl;
-    c.setValue(c.getValue(i)+/*ambiantLighting*/+diffuseLighting+specularLighting,i);
+    c.setValue(c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting,i);
   }
   cout<<"Computed color"<<endl<<c<<endl;
   cout<<"dist : "<<(pos-sphere.getCenter()).norm()<<endl;

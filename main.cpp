@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
     Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Scene sc = Scene(0);
-    //sc.setAmbiantLighting(0.0000000000000000000000001);
+    sc.setAmbiantLighting(0.001);
     sc.addSphere(s);
 
     tracer(ca,sc);while(1){}
@@ -113,7 +113,7 @@ void tracer(Camera ca, Scene s){
                 Color c = phongColor(ca, s, lights, s.getSphere(i), pos);
                 for(int i = 0; i <3; i++){
                     //cout << "   " << c.getValue(i)*255;
-                    img(x,y,i) = c.getValue(i)*255;
+                    img(x,y,i) = c.getValue(i);//*255;
                     cout << c.getValue(i) << "     ";
                 }
                 cout << endl << endl;
@@ -130,4 +130,5 @@ void tracer(Camera ca, Scene s){
     img.save_png("test.png");
     img.save_jpeg("test.jpeg");
     img.save_bmp("test.bmp");
+    while(1){};
 }
