@@ -46,7 +46,7 @@ inline std::ostream& operator<<(std::ostream& out, const Vector& r){r.print(out)
 class Color{
 public:
     Color(const double& r,const double& g,double const& b){rgb[0]=r;rgb[1]=g;rgb[2]=b;}
-    Color(){Color(0.,0.,0.);}
+    Color(){rgb[0]=0.;rgb[1]=0.;rgb[2]=0.;}
     void setValue(const double value,const int channel);
     double getValue(const int channel)const;
 private:
