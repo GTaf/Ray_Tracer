@@ -123,6 +123,8 @@ private:
 
 class Camera{
 public:
+    Camera(Vector Eye, Vector Target, Vector Up, int H, int W):
+    eye(Eye),target(Target), up(Up), h(H), w(W){}
     Vector getEye()const;
     Vector getTarget()const;
     Vector getUp()const;

@@ -17,6 +17,8 @@ Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& 
       specularLighting+=m.getSpecular()*pow(R*V,m.getAlpha())*it->getSpecular();
     }
     c.setValue(c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting,i);
+    
+    
   }
   return c;
 }

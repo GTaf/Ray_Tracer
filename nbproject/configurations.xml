@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>CImg.hpp</itemPath>
       <itemPath>basics.h</itemPath>
+      <itemPath>phongReflectionModel.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -56,6 +57,8 @@
       </item>
       <item path="phongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="phongReflectionModel.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -86,6 +89,8 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="phongReflectionModel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="phongReflectionModel.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
