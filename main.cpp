@@ -29,28 +29,32 @@ void tracer(Camera ca, Scene s);
 
 int main(int argc, char** argv) {
     
-    Sphere s = Sphere(1, Vector(0,0,0));
+    Sphere s = Sphere(250, Vector(500,0,0), Color(100,50,0), Material(1,1,1,1));
     Ray r = Ray(Vector(1,0,0), Vector(0,5,0));
     double dist;
     bool b = ray_sphere_intersect(r,s,&dist);
     cout << b << endl;
     
-    Camera ca = Camera(Vector(0,0,0), Vector(10,0,0), Vector(0,1,0), 5, 5);
+    Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Scene sc = Scene(0);
-    sc.addSphere(Sphere(1, Vector(5,0,0)));
+    sc.addSphere(s);
     
     tracer(ca,sc);
     
     return 0;
 }
 
-bool ray_sphere_intersect(Ray r, Sphere s, double *dist){//le rayon par du point de vision
-    double d;
-    Vector m = r.getPoint().add(s.getCenter().multiply(-1));
-    d = r.getVector().dotProduct(m);
+bool ray_sphere_intersect(Ray r, Sphere s, double *dist){//le rayon part du point de vision
+    double d = 0;
+    Vector o = r.getPoint(), c = s.getCenter(), l = r.getVector();
+    
+    Vector m = o-c;
+    //cout << l << endl;
+    d = l.normalize()*m;
     d = d*d;
-    d -= m.dotProduct(m);
+    d -= m*m;
     d += s.getRadius()*s.getRadius();
+    //cout << d << endl;
     //according to 
     //https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
     //where o = r.getPoint() c = s l = r.getVector
@@ -71,25 +75,24 @@ void tracer(Camera ca, Scene s){
     CImg<float> img(ca.getH(),ca.getW(),1,3); //create image
     
     cimg_forXY(img,x,y) {  //for each pixel of the image
-        
         Ray r = ca.Rayf(x,y);//rayon qui va de l'oeil au point (x.y)
+        //cout << r.getPoint() << r.getVector() << s.getSphere(0).getCenter() << s.getSphere(0).getRadius() << endl<<endl;
         for(int i = 0; i < s.size(); i++){
             double dist = 0;
             if(ray_sphere_intersect(r,s.getSphere(i),&dist)){//compute color
                 Vector intersect = ca.getEye()+r.getVector().normalize().multiply(dist);
                 std::vector<Light> lights;
-                lights.push_back(Light(Vector(0,0,1), Color(), 0, 1));
+                lights.push_back(Light(Vector(0,0,1), Color(255,255,255), 0, 1));
                 Color c = phongColor(ca, s, lights, s.getSphere(i), intersect);
                 for(int i = 0; i <3; i++){
-                    cout << "   " << c.getValue(i);
+                    //cout << "   " << c.getValue(i)*255;
                     img(x,y,i) = c.getValue(i)*255;
                 }
-                cout << endl;
             }
             else{
-                img(x,y,0) = 255;
-                img(x,y,1) = 255;
-                img(x,y,2) = 255;
+                for(int i = 0; i <3; i++){
+                    img(x,y,i) = 0;
+                }
             }
         }
         //img(x,y,c) = pixel_value_at(x,y,c); 
