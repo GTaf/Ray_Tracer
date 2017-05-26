@@ -37,7 +37,7 @@ Vector Ray::getPoint()const{return p;}
 Vector Ray::getVector()const{return v;}
 
 Vector Sphere::getCenter()const{return p;}
-int Sphere::getRadius()const{return radius;}
+double Sphere::getRadius()const{return radius;}
 
 Sphere::Sphere(int r, Vector c){
     radius = r;

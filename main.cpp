@@ -26,6 +26,8 @@ using namespace cimg_library;
  */
 bool ray_sphere_intersect(Ray r, Sphere s, double *dist);
 bool ray_sphere_intersect2(Ray r, Sphere s, Vector& v);
+void tracerRecursive(Camera ca, Scene s);
+Color computeColor(Camera ca, Scene s, Ray origin, int index);
 void tracer(Camera ca, Scene s);
 
 int main(int argc, char** argv) {
@@ -41,7 +43,7 @@ int main(int argc, char** argv) {
     sc.setAmbiantLighting(0.001);
     sc.addSphere(s);
 
-    tracer(ca,sc);while(1){}
+    tracerRecursive(ca,sc);
     /*Sphere s(2,Vector(4,0,0),Color(255,50,0),Material(0.5,0.5,0.5,0.1));
     Ray r(Vector(4,1,0),Vector(0,0,0));
     double dist;
@@ -107,8 +109,8 @@ void tracer(Camera ca, Scene s){
                 Vector pos;
               if(ray_sphere_intersect2(r,s.getSphere(i),pos)){
                 std::vector<Light> lights;
-                lights.push_back(Light(Vector(0,200,100), Color(1.,1.,1.),Color(0.,0.,0.)));
-                lights.push_back(Light(Vector(0,200,100), Color(0.,0.,0.),Color(1.,1.,1.)));
+                //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
+                lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
               //  Color c = phongColor(ca, s, lights, s.getSphere(i), intersect);
                 Color c = phongColor(ca, s, lights, s.getSphere(i), pos);
                 for(int i = 0; i <3; i++){
@@ -130,5 +132,87 @@ void tracer(Camera ca, Scene s){
     img.save_png("test.png");
     img.save_jpeg("test.jpeg");
     img.save_bmp("test.bmp");
-    while(1){};
+    while (!main_disp.is_closed()){}
+}
+
+
+Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleur du point vu "depuis" le vecteur origin
+    
+    double dist = -1;//distance au point intersecté
+    int j;
+    Vector pos, res;//vecteur à intersecter
+    
+    std::vector<Light> lights;
+    //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
+    lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
+    
+    for(int i = 0; i < s.size(); i++){//pour chaque spher
+        
+        
+        if(ray_sphere_intersect2(origin,s.getSphere(i),pos) && i != index){//si intersection, pas sur la même sphère
+            if(dist == -1 || dist > (pos-origin.getVector()).norm()){//si intersection plus près
+                res = pos;//on change l'intersection
+                dist = (pos-origin.getVector()).norm();
+                j = i;
+            }
+        }       
+    }
+    if(dist == -1){ //pas d'intersection'
+        return  phongColor(ca, s, lights, s.getSphere(index), res);
+    }
+    else{//intersection donc calcul recursif
+        double r = s.getSphere(index).getR();
+        return phongColor(ca, s, lights, s.getSphere(j), res).multiply(r).add(computeColor(ca,s,origin,j).multiply(1-r));
+    }
+    
+    
+}
+
+void tracerRecursive(Camera ca, Scene s){
+    //pour tous les spheres
+
+    Vector eye = ca.getEye();
+    Vector target = ca.getTarget();
+
+    //code for Cimg found at
+    //https://stackoverflow.com/questions/14914709/
+    CImg<float> img(ca.getH(),ca.getW(),1,3); //create image
+
+    cimg_forXY(img,x,y) {  //for each pixel of the image
+        Ray r = ca.Rayf(x,y);//rayon qui va de l'oeil au point (x.y)
+        bool intersect = false;
+        
+        double dist = -1;//distance au point intersecté
+        int j;
+        Vector pos, res;//vecteur à intersecter
+        
+        for(int i = 0; i < s.size(); i++){//pour chaque sphere            
+            if(ray_sphere_intersect2(r,s.getSphere(i),pos)){//si intersection, pas sur la même sphère
+                if(dist == -1 || dist > (pos-r.getVector()).norm()){//si intersection plus près
+                    res = pos;//on change l'intersection
+                    dist = (pos-r.getVector()).norm();
+                    j = i;
+                }
+            }
+        }  
+        
+        if(intersect = true){//si intersection
+            Color c = computeColor(ca, s, r, j);
+            for(int i = 0; i <3; i++){
+                img(x,y,i) = c.getValue(i);
+            }
+        }
+        
+        else{//sinon couleur de fond noire
+            for(int i = 0; i < 3; i++){
+                img(x,y,i) = 0;
+            }
+        }        
+        //img(x,y,c) = pixel_value_at(x,y,c);
+    }
+    CImgDisplay main_disp(img,"Click a point");
+    img.save_png("test.png");
+    img.save_jpeg("test.jpeg");
+    img.save_bmp("test.bmp");
+    while (!main_disp.is_closed()){}
 }

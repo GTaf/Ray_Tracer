@@ -47,6 +47,8 @@ class Color{
 public:
     Color(const double& r,const double& g,double const& b){rgb[0]=r;rgb[1]=g;rgb[2]=b;}
     Color(){rgb[0]=0.;rgb[1]=0.;rgb[2]=0.;}
+    Color multiply(double d){rgb[0]*=d;rgb[1]*=d;rgb[2]*=d;}
+    Color add(Color c){rgb[0]+=c.getValue(0);rgb[1]+=c.getValue(1);rgb[2]+=c.getValue(2);}
     void setValue(const double value,const int channel);
     double getValue(const int channel)const;
 private:
@@ -95,13 +97,15 @@ public:
     void setMaterial(const Material& m){material=m;}
     Material getMaterial()const{return material;}
     Color getColor()const{return color;}
-    int getRadius()const;
+    double getRadius()const;
+    double getR(){return r;}
 
 private:
     int radius;
     Vector p;
     Color color;
     Material material;
+    double r;//coefficient de reflection, entre 0 et 1
 };
 
 class Source{
