@@ -77,6 +77,8 @@ bool ray_sphere_intersect(Ray r, Sphere s, double *dist){//le rayon part du poin
     }
     return d >= 0;
 }
+
+/*A modifier !!!!!!!!!! Intersection que dans un seul sens*/
 bool ray_sphere_intersect2(Ray r, Sphere s,Vector& pos){//le rayon part du point de vision
   Vector m=s.getCenter()-r.getPoint();
     Vector a=(m*r.getVector().normalize())*r.getVector().normalize();
