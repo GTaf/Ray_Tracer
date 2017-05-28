@@ -3,7 +3,7 @@
 using namespace std;
 Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& lights, const Sphere& sphere,const Vector& pos){
   Color c;
-  cout<<"sphere "<<sphere.getColor()<<endl;
+  //cout<<"sphere "<<sphere.getColor()<<endl;
   for(int i=0;i<3;i++){
     Material m=sphere.getMaterial();
     double ambiantLighting = m.getAmbient()*sphere.getColor().getValue(i)*scene.getAmbiantLighting();
@@ -21,12 +21,12 @@ Color phongColor(const Camera& cam,const Scene& scene,const std::vector<Light>& 
       specularLighting+=m.getSpecular()*sphere.getColor().getValue(i)*mirror*it->getSpecular(i);
       //cout<<"test"<<endl;
       //cout<<"tttttttttttttttttttttttt  "<<it->getSpecular(i)<<"  "<<it->getDiffuse(i)<<" i "<<i<<endl;
-      cout<<diffuseLighting<<" diffuse "<<L*N<<endl;
+      //cout<<diffuseLighting<<" diffuse "<<L*N<<endl;
     }
     //cout<<"i "<<i<<" v "<<c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting<<endl;
     c.setValue(c.getValue(i)+ambiantLighting+diffuseLighting+specularLighting,i);
   }
-  cout<<"Computed color"<<endl<<c<<endl;
-  cout<<"dist : "<<(pos-sphere.getCenter()).norm()<<endl;
+  //cout<<"Computed color"<<endl<<c<<endl;
+  //cout<<"dist : "<<(pos-sphere.getCenter()).norm()<<endl;
   return c;
 }

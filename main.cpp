@@ -17,8 +17,10 @@
 #include "CImg.hpp"
 #include "phongReflectionModel.h"
 
+#define IMAGE_SIZE_F 10;
 using namespace std;
 using namespace cimg_library;
+
 
 
 /*
@@ -36,7 +38,7 @@ int main(int argc, char** argv) {
     Ray r = Ray(Vector(1,0,0), Vector(0,5,0));
     double dist;
     bool b = ray_sphere_intersect(r,s,&dist);
-    cout << b << endl;
+    //cout << b << endl;
 
     Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Scene sc = Scene(0);
@@ -86,7 +88,7 @@ bool ray_sphere_intersect2(Ray r, Sphere s,Vector& pos){//le rayon part du point
     if(b.norm()-s.getRadius()>0)return false;
     double d=sqrt(pow(s.getRadius(),2)-pow(b.norm(),2));
     pos=(a.norm()-d)*r.getVector().normalize()+r.getPoint();
-    std::cout<<"ras"<<std::endl;
+    //std::cout<<"ras"<<std::endl;
     return true;
 }
 
@@ -113,14 +115,10 @@ void tracer(Camera ca, Scene s){
                 std::vector<Light> lights;
                 //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
                 lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
-              //  Color c = phongColor(ca, s, lights, s.getSphere(i), intersect);
                 Color c = phongColor(ca, s, lights, s.getSphere(i), pos);
                 for(int i = 0; i <3; i++){
-                    //cout << "   " << c.getValue(i)*255;
-                    img(x,y,i) = c.getValue(i);//*255;
-                    cout << c.getValue(i) << "     ";
+                    img(x,y,i) = c.getValue(i);
                 }
-                cout << endl << endl;
             }
             else{
                 for(int i = 0; i <3; i++){
@@ -147,10 +145,8 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
     std::vector<Light> lights;
     //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
     lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
-    
-    for(int i = 0; i < s.size(); i++){//pour chaque spher
-        
-        
+    //recherc he une intersection
+    for(int i = 0; i < s.size(); i++){//pour chaque sphere        
         if(ray_sphere_intersect2(origin,s.getSphere(i),pos) && i != index){//si intersection, pas sur la même sphère
             if(dist == -1 || dist > (pos-origin.getVector()).norm()){//si intersection plus près
                 res = pos;//on change l'intersection
@@ -160,9 +156,10 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
         }       
     }
     if(dist == -1){ //pas d'intersection'
-        return  phongColor(ca, s, lights, s.getSphere(index), res);
+        return  phongColor(ca, s, lights, s.getSphere(index), origin.getPoint());
     }
     else{//intersection donc calcul recursif
+        cout << "problem" << endl;
         double r = s.getSphere(index).getR();
         return phongColor(ca, s, lights, s.getSphere(j), res).multiply(r).add(computeColor(ca,s,origin,j).multiply(1-r));
     }
@@ -179,33 +176,34 @@ void tracerRecursive(Camera ca, Scene s){
     //code for Cimg found at
     //https://stackoverflow.com/questions/14914709/
     CImg<float> img(ca.getH(),ca.getW(),1,3); //create image
-
     cimg_forXY(img,x,y) {  //for each pixel of the image
         Ray r = ca.Rayf(x,y);//rayon qui va de l'oeil au point (x.y)
         bool intersect = false;
         
         double dist = -1;//distance au point intersecté
-        int j;
+        int j = -1; //numero de la sphere finale retenue
         Vector pos, res;//vecteur à intersecter
         
         for(int i = 0; i < s.size(); i++){//pour chaque sphere            
-            if(ray_sphere_intersect2(r,s.getSphere(i),pos)){//si intersection, pas sur la même sphère
-                if(dist == -1 || dist > (pos-r.getVector()).norm()){//si intersection plus près
+            if(ray_sphere_intersect2(r,s.getSphere(i),pos)){//si intersection
+                intersect = true;
+                if(dist == -1 || dist > (pos-r.getPoint()).norm()){//si intersection plus près
                     res = pos;//on change l'intersection
-                    dist = (pos-r.getVector()).norm();
+                    dist = (pos-r.getPoint()).norm();
                     j = i;
                 }
             }
         }  
-        
+       
         if(intersect = true){//si intersection
-            Color c = computeColor(ca, s, r, j);
+            Color c = computeColor(ca, s, Ray(r.getVector(), pos), j);
             for(int i = 0; i <3; i++){
                 img(x,y,i) = c.getValue(i);
             }
         }
         
         else{//sinon couleur de fond noire
+            cout << "coucou" << endl;
             for(int i = 0; i < 3; i++){
                 img(x,y,i) = 0;
             }
