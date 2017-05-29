@@ -33,15 +33,15 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index);
 void tracer(Camera ca, Scene s);
 
 int main(int argc, char** argv) {
-    Sphere s = Sphere(250, Vector(400,-100,0), Color(255,50,0), Material(0.5,0.5,0.5,20.));
-    Sphere t = Sphere(250, Vector(500,400,300), Color(255,50,0), Material(0.5,0.5,0.5,20.));
+    Sphere s = Sphere(250, Vector(400,400,300), Color(255,50,0), Material(0.5,0.5,0.5,20.));
+    Sphere t = Sphere(250, Vector(400,0,0), Color(255,50,0), Material(0.5,0.5,0.5,20.));
     Ray r = Ray(Vector(1,0,0), Vector(0,5,0));
     double dist;
-    bool b = ray_sphere_intersect(r,s,&dist);
+    //bool b = ray_sphere_intersect(r,s,&dist);
     //cout << b << endl;  Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Scene sc = Scene(0);
-    sc.setAmbiantLighting(0.5);
+    sc.setAmbiantLighting(0.3);
     sc.addSphere(s);
     sc.addSphere(t);
 
@@ -148,7 +148,7 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
     //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
     lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
     //recherc he une intersection
-    for(int i = 0; i < s.size(); i++){//pour chaque sphere
+    /*for(int i = 0; i < s.size(); i++){//pour chaque sphere
         if(ray_sphere_intersect2(origin,s.getSphere(i),pos) && i != index){//si intersection, pas sur la même sphère
             if(dist == -1 || dist > (pos-origin.getVector()).norm()){//si intersection plus près
                 res = pos;//on change l'intersection
@@ -156,7 +156,7 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
                 j = i;
             }
         }
-    }
+    }*/
     if(dist == -1){ //pas d'intersection'
         return  phongColor(ca, s, lights, s.getSphere(index), origin.getPoint());
     }
@@ -197,8 +197,8 @@ void tracerRecursive(Camera ca, Scene s){
             }
         }
 
-        if(intersect = true){//si intersection
-            Color c = computeColor(ca, s, Ray(r.getVector(), pos), j);
+        if(intersect){//si intersection
+            Color c = computeColor(ca, s, Ray(r.getVector(), res), j);
             for(int i = 0; i <3; i++){
                 img(x,y,i) = c.getValue(i);
             }
