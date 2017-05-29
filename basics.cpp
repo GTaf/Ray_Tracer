@@ -70,7 +70,7 @@ Ray Camera::Rayf(double x, double y){
 }
 
 Scene::Scene(int size){std::vector<Sphere> fset(size); set = fset;}
-int Scene::size(){return set.size();}
+int Scene::size()const{return set.size();}
 void Scene::addSphere(Sphere s){set.push_back(s);}
 void Scene::setAmbiantLighting(double l){
   if(l<0) ambiantLighting=0;

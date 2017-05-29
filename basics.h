@@ -146,7 +146,7 @@ private:
 class Scene{
 public:
     Scene(int size);
-    int size();
+    int size()const;
     void addSphere(Sphere s);
     void setAmbiantLighting(double l);
     double getAmbiantLighting()const{return ambiantLighting;}

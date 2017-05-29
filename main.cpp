@@ -33,14 +33,17 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index);
 void tracer(Camera ca, Scene s);
 
 int main(int argc, char** argv) {
-    Sphere s = Sphere(250, Vector(500,0,0), Color(255,50,0), Material(0.5,0.5,0.5,20.));
+    Sphere s = Sphere(250, Vector(400,-100,0), Color(255,50,0), Material(0.5,0.5,0.5,20.));
+    Sphere t = Sphere(250, Vector(500,400,300), Color(255,50,0), Material(0.5,0.5,0.5,20.));
     Ray r = Ray(Vector(1,0,0), Vector(0,5,0));
     double dist;
     bool b = ray_sphere_intersect(r,s,&dist);
     //cout << b << endl;  Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
+    Camera ca = Camera(Vector(0,0,0), Vector(100,0,0), Vector(0,1,0), 1000, 1000);
     Scene sc = Scene(0);
-    sc.setAmbiantLighting(0.001);
+    sc.setAmbiantLighting(0.5);
     sc.addSphere(s);
+    sc.addSphere(t);
 
     tracerRecursive(ca,sc);
     /*Sphere s(2,Vector(4,0,0),Color(255,50,0),Material(0.5,0.5,0.5,0.1));
@@ -157,11 +160,11 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
     if(dist == -1){ //pas d'intersection'
         return  phongColor(ca, s, lights, s.getSphere(index), origin.getPoint());
     }
-    else{//intersection donc calcul recursif
+    /*else{//intersection donc calcul recursif
         cout << "problem" << endl;
         double r = s.getSphere(index).getR();
         return phongColor(ca, s, lights, s.getSphere(j), res).multiply(r).add(computeColor(ca,s,origin,j).multiply(1-r));
-    }
+    }*/
 
 
 }
