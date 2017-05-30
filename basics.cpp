@@ -38,7 +38,6 @@ Vector Ray::getVector()const{return v;}
 
 Vector Sphere::getCenter()const{return p;}
 double Sphere::getRadius()const{return radius;}
-
 Sphere::Sphere(int r, Vector c){
     radius = r;
     p = c;
@@ -65,7 +64,7 @@ Ray Camera::Rayf(double x, double y){
     Vector final = target;
     final = final.add(up.normalize().multiply(y-h/2));
     final = final.add(up.orth(target.minus(eye)).normalize().multiply(x-w/2));
-    Ray r = Ray(final.minus(eye), eye);
+    Ray r = Ray(final.minus(eye).normalize(), eye);
     return r;
 }
 

@@ -95,6 +95,7 @@ public:
     Vector getCenter()const;
     Vector getNormal(const Vector& pos)const{return (pos-p).normalize();}
     void setMaterial(const Material& m){material=m;}
+    void setR(double R){r = R;}
     Material getMaterial()const{return material;}
     Color getColor()const{return color;}
     double getRadius()const;
