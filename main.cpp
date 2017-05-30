@@ -29,24 +29,36 @@ using namespace cimg_library;
 bool ray_sphere_intersect(Ray r, Sphere s, double *dist);
 bool ray_sphere_intersect2(Ray r, Sphere s, Vector& v);
 void tracerRecursive(Camera ca, Scene s);
-Color computeColor(Camera ca, Scene s, Ray origin, int index);
+Color computeColor(Camera ca, Scene s, Ray origin, int index, int nb);
 void tracer(Camera ca, Scene s);
 void tracer2(Camera ca, Scene s);
 bool intersecti(Ray r, Sphere s, Vector& pos);
+Color mix(Color a, Color b, double r);
 
 int main(int argc, char** argv) {
     Sphere s = Sphere(1.5, Vector(10,2,2), Color(255,0,0), Material(0.5,0.5,0.5,20.));
     s.setR(0.5);
     Sphere t = Sphere(1, Vector(10,0,0), Color(0,255,0), Material(1,0.5,0.5,50));
-    s.setR(0.5);
+    t.setR(1);
     Camera ca = Camera(Vector(0,0,0), Vector(110,0,0), Vector(0,1,0), IS, IS);
     Scene sc = Scene(0);
     sc.setAmbiantLighting(0.3);
     sc.addSphere(s);
     sc.addSphere(t);
-
+    
+    Color c = Color(1.,1.,1.);
+    cout << c << "            " << mix(c,c,0.5) << endl;
     tracerRecursive(ca,sc);
     return 0;
+}
+
+Color mix(Color a, Color b, double r){
+    Color c;
+    for(int i = 0; i < 3;i++){
+        c.setValue(a.getValue(i)*r+b.getValue(i)*(1-r),i);
+    }
+    
+    return c;
 }
 
 bool ray_sphere_intersect(Ray r, Sphere s, double *dist){//le rayon part du point de vision
@@ -84,14 +96,14 @@ bool ray_sphere_intersect2(Ray r, Sphere s,Vector& pos){//le rayon part du point
 }
 
 
-Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleur du point vu "depuis" le vecteur origin
+Color computeColor(Camera ca, Scene s, Ray origin, int index, int nb){//calcul la couleur du point vu "depuis" le vecteur origin
 
     double dist = -1;//distance au point intersecté
     int j;
     Vector pos, res;//vecteur à intersecter
 
     std::vector<Light> lights;
-    //lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
+    lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
     lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
     //recherc he une intersection
     for(int i = 0; i < s.size(); i++){//pour chaque sphere
@@ -103,25 +115,27 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index){//calcul la couleu
             }
         }
     }
-    if(dist == -1){ //pas d'intersection'
+    if(dist == -1 || nb == 0){ //pas d'intersection' ou plus de reflexion
         return  phongColor(ca, s, lights, s.getSphere(index), origin.getPoint());
     }
     else{//intersection donc calcul recursif
+        Vector rf = origin.getVector().normalize();
+        Vector n = s.getSphere(j).getNormal(res).normalize();
+        rf = rf - 2 * (rf*n)*n;
+        
         double r = s.getSphere(index).getR();
-        return phongColor(ca, s, lights, s.getSphere(j), res).multiply(r).add(computeColor(ca,s,origin,j).multiply(1-r));
+        //return (phongColor(ca, s, lights, s.getSphere(index), origin.getPoint()).multiply(1));//.add(computeColor(ca,s,Ray(rf ,res),j, nb--).multiply(1-r));
+        return mix(phongColor(ca, s, lights, s.getSphere(index), origin.getPoint()), computeColor(ca,s,Ray(rf ,res),j, nb--), r);
     }
+    
 
 
 }
 
 void tracerRecursive(Camera ca, Scene s){
-    //pour tous les spheres
-
-    Vector eye = ca.getEye();
-    Vector target = ca.getTarget();
     
     double fov = 50, aspectratio = ca.getW() / double(ca.getH()); 
-    double angle = tan(M_PI * 0.5 * fov / 180.); 
+    double angle = tan(M_PI * 0.5 * fov / 180.);
 
     //code for Cimg found at
     //https://stackoverflow.com/questions/14914709/
@@ -149,7 +163,10 @@ void tracerRecursive(Camera ca, Scene s){
         }
 
         if(intersect){//si intersection
-            Color c = computeColor(ca, s, Ray(r.getVector(), res), j);
+            Vector rf = r.getVector().normalize();
+            Vector n = s.getSphere(j).getNormal(res).normalize();
+            rf = rf - 2 * (rf*n)*n;
+            Color c = computeColor(ca, s, Ray(rf ,res), j, 2);
             for(int i = 0; i <3; i++){
                 img(x,y,i) = c.getValue(i);
             }

@@ -49,7 +49,6 @@ void Color::setValue(const double value,const int channel){
     if(channel <0 || channel>2) return;
     rgb[channel]=value;
 }
-
 double Color::getValue(const int channel)const{
     if (channel<0 || channel >2) return -1.;
     return rgb[channel];
