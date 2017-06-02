@@ -15,7 +15,7 @@
 #include <set>
 #include "basics.h"
 #include <math.h>
-
+#define IS 1000
 using namespace std;
 
 /*
@@ -76,3 +76,22 @@ void Scene::setAmbiantLighting(double l){
   else ambiantLighting=l;
 }
 Sphere Scene::getSphere(int index)const{return set[index];}
+
+void World::createWorld(){
+  Sphere s = Sphere(1.5, Vector(10,2,2), Color(255,0,0), Material(0.5,0.5,0.5,20.));
+  s.setR(0.5);
+  Sphere t = Sphere(1, Vector(10,0,0), Color(0,255,0), Material(1,0.5,0.5,50));
+  t.setR(1);
+  Camera ca = Camera(Vector(0,0,0), Vector(110,0,0), Vector(0,1,0), IS, IS);
+  Scene sc = Scene(0);
+  sc.setAmbiantLighting(0.3);
+  sc.addSphere(s);
+  sc.addSphere(t);
+  std::vector<Light> lights;
+  lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
+  lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
+  addLight(lights[0]);
+  addLight(lights[1]);
+  setScene(sc);
+  setCamera(ca);
+}

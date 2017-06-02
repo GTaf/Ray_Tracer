@@ -129,6 +129,7 @@ private:
 
 class Camera{
 public:
+    Camera(){};
     Camera(Vector Eye, Vector Target, Vector Up, int H, int W):
     eye(Eye),target(Target), up(Up), h(H), w(W){}
     Vector getEye()const;
@@ -146,6 +147,7 @@ private:
 
 class Scene{
 public:
+    Scene(){};
     Scene(int size);
     int size()const;
     void addSphere(Sphere s);
@@ -155,4 +157,19 @@ public:
 private:
     std::vector<Sphere> set;
     double ambiantLighting;
+};
+
+class World{
+public:
+  void createWorld();
+  void addLight(Light& l){lights.push_back(l);}
+  void setCamera(Camera& cam){camera=cam;}
+  void setScene(Scene& s){scene=s;}
+  Scene getScene()const{return scene;}
+  Camera getCamera()const{return camera;}
+  std::vector<Light> getLights()const{return lights;}
+private:
+  Scene scene;
+  Camera camera;
+  std::vector<Light> lights;
 };
