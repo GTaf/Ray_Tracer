@@ -183,3 +183,7 @@ private:
   Vector origin;
   Vector normal;
 };
+
+class Object{
+
+};
