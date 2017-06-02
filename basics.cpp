@@ -38,7 +38,7 @@ Vector Ray::getVector()const{return v;}
 
 Vector Sphere::getCenter()const{return p;}
 double Sphere::getRadius()const{return radius;}
-Sphere::Sphere(int r, Vector c){
+Sphere::Sphere(double r, Vector c){
     radius = r;
     p = c;
 }
@@ -81,12 +81,21 @@ void World::createWorld(){
   Sphere s = Sphere(1.5, Vector(10,2,2), Color(255,0,0), Material(0.5,0.5,0.5,20.));
   s.setR(0.5);
   Sphere t = Sphere(1, Vector(10,0,0), Color(0,255,0), Material(1,0.5,0.5,50));
+  Sphere u = Sphere(1, Vector(12,0.5,4), Color(30,55,250), Material(1,0.5,0.5,50));
+  Sphere v = Sphere(0.4, Vector(8,-0.5,-1), Color(120,155,250), Material(1,0.5,0.5,50));
+  Sphere w = Sphere(0.4, Vector(10,-2,-1.5), Color(120,155,250), Material(1,0.5,0.5,1));
   t.setR(1);
+  u.setR(1);
+  v.setR(0.2);
+  w.setR(0.1);
   Camera ca = Camera(Vector(0,0,0), Vector(110,0,0), Vector(0,1,0), IS, IS);
   Scene sc = Scene(0);
-  sc.setAmbiantLighting(0.3);
+  sc.setAmbiantLighting(0.7);
   sc.addSphere(s);
   sc.addSphere(t);
+  sc.addSphere(u);
+  sc.addSphere(v);
+  sc.addSphere(w);
   std::vector<Light> lights;
   lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
   lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));

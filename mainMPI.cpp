@@ -14,10 +14,8 @@ using namespace cimg_library;
 bool ray_sphere_intersect2(Ray r, Sphere s, Vector& v);
 void tracerRecursive(Camera ca, Scene s);
 void tracerRecursive(CImg<float> img,World& world,int y,double *answer);
-//Color computeColor(World world,Camera ca, Scene s, Ray origin, int index,int nb);
 Color computeColor(Camera ca, Scene s, Ray origin, int index, int nb);
 bool intersecti(Ray r, Sphere s, Vector& pos);
-//void createWorld(){}
 void computeImage(CImg<float>& img,World& world);
 Color mix(Color a, Color b, double r);
 int main(int argc, char** argv) {
@@ -29,7 +27,6 @@ int main(int argc, char** argv) {
     world.createWorld();
     CImg<float> img(world.getCamera().getH(),world.getCamera().getW(),1,3); //create image
     computeImage(img,world);
-    //tracerRecursive(ca,sc);
     //Affichage de l'image
     if(myrank==0){
     CImgDisplay main_disp(img,"Click a point");
@@ -83,7 +80,6 @@ void computeImage(CImg<float>& img,World& world){
          for(int i=0;i<size-1;++i){
               MPI_Test(requests+i,&flag,&status);
               if(flag){
-                    std::cout<<"Tâches terminées : "<<received<<std::endl;
                     if(working[i]) ++received;
               if(count<yRange){
                    working[i]=true;
@@ -95,23 +91,17 @@ void computeImage(CImg<float>& img,World& world){
               }
          }
      }
-     std::cout<<"----------------------------------FIN DU TRAITEMENT---------------------------"<<std::endl;
      //On signale aux esclaves qu'ils peuvent arrêter leur tâche. Le received n'a ici aucun role.
      count=-1;
      for(int i=0;i<size-1;++i){
-        std::cout<<"sending "<<i+1<<std::endl;
        MPI_Send(&count,1, MPI_INT,i+1,0, MPI_COMM_WORLD);
-       std::cout<<"wait for "<<i+1<<std::endl;
        MPI_Recv(garbage,3*xRange, MPI_DOUBLE,i+1,0, MPI_COMM_WORLD,0);
-      std::cout<<"ok "<<i+1<<std::endl;
      }
-     std::cout<<"copy"<<std::endl;
      for(int y=0;y<yRange;++y){
        for(int x=0;x<xRange;++x){
          for(int i=0;i<3;++i) img(x,y,i)=tempImg[y][3*x+i];
        }
      }
-     std::cout<<"end"<<std::endl;
    }
 //Code des esclaves
 else {
@@ -121,9 +111,7 @@ else {
   while(y!=-1){
     MPI_Recv(&y,1,MPI_INT,0,0,MPI_COMM_WORLD,0);
     if(y!=-1){
-    std::cout<<myrank<<"still alive. Next y: "<<y<<std::endl;
     tracerRecursive(img,world,y,answer);
-    std::cout<<"Proc "<<myrank<<"  a traite ligne "<<y<<std::endl;
   }
     MPI_Isend(answer,3*xRange, MPI_DOUBLE,0,0, MPI_COMM_WORLD,&std);
   }
@@ -144,92 +132,7 @@ bool ray_sphere_intersect2(Ray r, Sphere s,Vector& pos){//le rayon part du point
                                   //et que le point de départ du rayon n'est pas dans la sphère (a.norm()>d)
 }
 
-/*Color computeColor(World world,Camera ca, Scene s, Ray origin, int index, int nb){//calcul la couleur du point vu "depuis" le vecteur origin
 
-    double dist = -1;//distance au point intersecté
-    int j;
-    Vector pos, res;//vecteur à intersecter
-/*
-    std::vector<Light> lights;
-    lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
-    lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));*/
-    //recherc he une intersection
-    /*for(int i = 0; i < s.size(); i++){//pour chaque sphere
-        if(ray_sphere_intersect2(origin,s.getSphere(i),pos) && i != index){//si intersection, pas sur la même sphère
-            if(dist == -1 || dist > (pos-origin.getVector()).norm()){//si intersection plus près
-                res = pos;//on change l'intersection
-                dist = (pos-origin.getVector()).norm();
-                j = i;
-            }
-        }
-    }
-    if(dist == -1 || nb == 0){ //pas d'intersection' ou plus de reflexion
-        return  phongColor(ca, s,world.getLights(), s.getSphere(index), origin.getPoint());
-    }
-    else{//intersection donc calcul recursif
-        Vector rf = origin.getVector().normalize();
-        Vector n = s.getSphere(j).getNormal(res).normalize();
-        rf = rf - 2 * (rf*n)*n;
-
-        double r = s.getSphere(index).getR();
-        //return (phongColor(ca, s, lights, s.getSphere(index), origin.getPoint()).multiply(1));//.add(computeColor(ca,s,Ray(rf ,res),j, nb--).multiply(1-r));
-        return mix(phongColor(ca, s, world.getLights(), s.getSphere(index), origin.getPoint()), computeColor(world,ca,s,Ray(rf ,res),j, nb--), r);
-    }
-}*/
-
-/*void tracerRecursive(Camera ca, Scene s)*/
-/*void tracerRecursive(CImg<float> img,World& world,int y,double *answer){
-    //pour tous les spheres
-    int myrank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
-
-    Camera  ca=world.getCamera();
-    Scene  scene=world.getScene();
-    Vector  eye = ca.getEye();
-    Vector  target = ca.getTarget();
-    //Etendue de la surface à calculer
-    int yRange=world.getCamera().getH();
-    int xRange=world.getCamera().getW();
-    double fov = 50, aspectratio = ca.getW() / double(ca.getH());
-    double angle = tan(M_PI * 0.5 * fov / 180.);
-    std::cout<<" Init--------------- "<<myrank<<" y "<<y<<std::endl;
-    ////////////////////////////////////////////
-    //Calcul et remplissage du tableau.
-
-      for(int x=0;x<xRange;++x){
-        double yp = (2 * ((x + 0.5) * 1/xRange) - 1) * angle * aspectratio;
-        double zp = (1 - 2 * ((y + 0.5) * 1/yRange)) * angle;
-        //Ray r = ca.Rayf(x*0.8,y*0.8);//rayon qui va de l'oeil au point (x.y)
-        Ray r = Ray(Vector(1,yp,zp).normalize(), Vector(0,0,0));
-        bool intersect = false;
-
-        double dist = -1;//distance au point intersecté
-        int j = -1; //numero de la sphere finale retenue
-        Vector pos, res;//vecteur à intersecter
-
-        for(int i = 0; i < scene.size(); i++){//pour chaque sphere
-            if(ray_sphere_intersect2(r,scene.getSphere(i),pos)){//si intersection
-                intersect = true;
-                if(dist == -1 || dist > (pos-r.getPoint()).norm()){//si intersection plus près
-                    res = pos;//on change l'intersection
-                    dist = (pos-r.getPoint()).norm();
-                    j = i;
-                }
-            }
-        }
-        if(intersect){//si intersection
-            Color c = computeColor(world,ca, scene, Ray(r.getVector(), res), j,2);
-            for(int i = 0; i <3; i++) answer[3*x+i]=c.getValue(i);
-        }
-          else{//sinon couleur de fond noire
-            for(int i = 0; i < 3; i++) answer[3*x+i]=0;
-          }
-        }
-          std::cout<<" End--------------- "<<myrank<<std::endl;
-}*/
-///////////////////////////////////////////////////
-//////////////////////////////////////////////////
-/////////////////////////////////////////////////
 void tracerRecursive(CImg<float> img,World& world,int y,double *answer){
 
     double fov = 50, aspectratio = world.getCamera().getW() / double(world.getCamera().getH());
@@ -274,7 +177,6 @@ void tracerRecursive(CImg<float> img,World& world,int y,double *answer){
                 answer[3*x+i] = 0;
             }
         }
-        //img(x,y,c) = pixel_value_at(x,y,c);
     }
 }
 
@@ -287,7 +189,7 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index, int nb){//calcul l
     std::vector<Light> lights;
     lights.push_back(Light(Vector(0,100,200), Color(1.,1.,1.),Color(0.,0.,0.)));
     lights.push_back(Light(Vector(0,-100,-200), Color(1.,1.,1.),Color(1.,1.,1.)));
-    //recherc he une intersection
+    //recherche une intersection
     for(int i = 0; i < s.size(); i++){//pour chaque sphere
         if(ray_sphere_intersect2(origin,s.getSphere(i),pos) && i != index){//si intersection, pas sur la même sphère
             if(dist == -1 || dist > (pos-origin.getVector()).norm()){//si intersection plus près
@@ -306,7 +208,6 @@ Color computeColor(Camera ca, Scene s, Ray origin, int index, int nb){//calcul l
         rf = rf - 2 * (rf*n)*n;
 
         double r = s.getSphere(index).getR();
-        //return (phongColor(ca, s, lights, s.getSphere(index), origin.getPoint()).multiply(1));//.add(computeColor(ca,s,Ray(rf ,res),j, nb--).multiply(1-r));
         return mix(phongColor(ca, s, lights, s.getSphere(index), origin.getPoint()), computeColor(ca,s,Ray(rf ,res),j, nb--), r);
     }
 

@@ -90,8 +90,8 @@ private:
 class Sphere{
 public:
     Sphere();
-    Sphere(int r, Vector c);
-    Sphere(int r, Vector v , Color c , Material m):radius(r),p(v),color(c),material(m){}
+    Sphere(double r, Vector c);
+    Sphere(double r, Vector v , Color c , Material m):radius(r),p(v),color(c),material(m){}
     Vector getCenter()const;
     Vector getNormal(const Vector& pos)const{return (pos-p).normalize();}
     void setMaterial(const Material& m){material=m;}
@@ -102,7 +102,7 @@ public:
     double getR(){return r;}
 
 private:
-    int radius;
+    double radius;
     Vector p;
     Color color;
     Material material;
@@ -172,4 +172,14 @@ private:
   Scene scene;
   Camera camera;
   std::vector<Light> lights;
+};
+
+class Plane{
+public:
+  Plane(const Vector& o, const Vector& n):origin(o),normal(n){}
+  Vector getOrigin()const{return origin;}
+  Vector getNormal()const{return normal;}
+private:
+  Vector origin;
+  Vector normal;
 };
